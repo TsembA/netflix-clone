@@ -2,13 +2,16 @@ name: CI - DevSecOps Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build-and-scan:
     runs-on: ubuntu-latest
+
+    env:
+      IMAGE_URI: netflix-clone:${{ github.sha }}   # added
 
     steps:
       - name: Checkout code
@@ -25,6 +28,42 @@ jobs:
         working-directory: app
         run: npm install
 
+      # -------------------------
+      # SCA – Dependency scanning
+      # -------------------------
+      - name: OWASP Dependency Check
+        uses: dependency-check/Dependency-Check_Action@v3
+        with:
+          project: "netflix-clone"
+          path: "app"                      # changed
+          format: "HTML"
+          out: "dependency-check-report"
+          args: >
+            --enableExperimental
+
+      # -------------------------
+      # Build container image
+      # -------------------------
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t $IMAGE_URI \
+            ./app
+
+      # -------------------------
+      # Container security gate
+      # -------------------------
+      - name: Trivy image scan
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: ${{ env.IMAGE_URI }}
+          severity: CRITICAL,HIGH
+          exit-code: 1
+          ignore-unfixed: true
+
+      # -------------------------
+      # Static code analysis
+      # -------------------------
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         with:
