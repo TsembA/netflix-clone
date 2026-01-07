@@ -32,10 +32,10 @@ jobs:
       # SCA – Dependency scanning
       # -------------------------
       - name: OWASP Dependency Check
-        uses: dependency-check/Dependency-Check_Action@v3
+        uses: dependency-check/Dependency-Check_Action@v4.0.0
         with:
           project: "netflix-clone"
-          path: "app"                      # changed
+          path: "app"
           format: "HTML"
           out: "dependency-check-report"
           args: >
