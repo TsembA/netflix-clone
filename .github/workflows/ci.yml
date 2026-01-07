@@ -42,26 +42,6 @@ jobs:
             --enableExperimental
 
       # -------------------------
-      # Build container image
-      # -------------------------
-      - name: Build Docker image
-        run: |
-          docker build \
-            -t $IMAGE_URI \
-            ./app
-
-      # -------------------------
-      # Container security gate
-      # -------------------------
-      - name: Trivy image scan
-        uses: aquasecurity/trivy-action@0.20.0
-        with:
-          image-ref: ${{ env.IMAGE_URI }}
-          severity: CRITICAL,HIGH
-          exit-code: 1
-          ignore-unfixed: true
-
-      # -------------------------
       # Static code analysis
       # -------------------------
       - name: SonarCloud Scan
@@ -73,3 +53,21 @@ jobs:
             -Dsonar.sources=app
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # -------------------------
+      # Build container image
+      # -------------------------
+      - name: Build Docker image
+        run: |
+          docker build -t $IMAGE_URI ./app
+
+      # -------------------------
+      # Container security gate
+      # -------------------------
+      - name: Trivy image scan
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: ${{ env.IMAGE_URI }}
+          severity: CRITICAL,HIGH
+          exit-code: 1
+          ignore-unfixed: true
