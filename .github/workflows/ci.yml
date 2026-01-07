@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_URI: netflix-clone:${{ github.sha }}   # added
+      IMAGE_URI: netflix-clone:${{ github.sha }}
 
     steps:
       - name: Checkout code
@@ -32,7 +32,7 @@ jobs:
       # SCA – Dependency scanning
       # -------------------------
       - name: OWASP Dependency Check
-        uses: dependency-check/Dependency-Check_Action@v4.0.0
+        uses: dependency-check/Dependency-Check_Action@v12.1.9
         with:
           project: "netflix-clone"
           path: "app"
