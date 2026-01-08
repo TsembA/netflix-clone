@@ -1,0 +1,2 @@
+ $ tfd -var-file=env/dev.tfvars
+  $ tfaa -var-file=env/dev.tfvars

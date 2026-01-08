@@ -1,3 +1,4 @@
+# infra/terraform/locals.tf
 locals {
   azs = slice(
     data.aws_availability_zones.available.names,

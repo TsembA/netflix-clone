@@ -71,3 +71,23 @@ jobs:
           severity: CRITICAL,HIGH
           exit-code: 1
           ignore-unfixed: true
+
+      # -------------------------
+      # AWS authentication
+      # -------------------------
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::<ACCOUNT_ID>:role/github-actions-ecr
+          aws-region: us-west-1
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # -------------------------
+      # Push image to ECR
+      # -------------------------
+      - name: Push image to ECR
+        run: |
+          docker tag $IMAGE_URI <ACCOUNT_ID>.dkr.ecr.us-west-1.amazonaws.com/netflix-clone:${{ github.sha }}
+          docker push <ACCOUNT_ID>.dkr.ecr.us-west-1.amazonaws.com/netflix-clone:${{ github.sha }}

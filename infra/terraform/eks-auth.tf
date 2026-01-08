@@ -1,3 +1,4 @@
+# infra/terraform/eks-auth.tf
 data "aws_caller_identity" "current" {}
 
 resource "aws_eks_access_entry" "admin" {

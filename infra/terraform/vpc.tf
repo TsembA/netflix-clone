@@ -1,3 +1,7 @@
+# infra/terraform/vpc.tf
+data "aws_availability_zones" "available" {
+  state = "available"
+}
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.5.1"
