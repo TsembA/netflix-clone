@@ -1,2 +1,13 @@
- $ tfd -var-file=env/dev.tfvars
-  $ tfaa -var-file=env/dev.tfvars
+$ tfd -var-file=env/dev.tfvars
+$ tfaa -var-file=env/dev.tfvars
+
+aws eks update-kubeconfig --region us-west-1 --name netflix-dev
+kubectl get nodes
+kubectl get ns
+kubectl create namespace app
+kubectl create namespace ingress
+kubectl get pods -n kube-system
+kubectl get ingressclass
+kubectl apply -f app/k8s/deployment.yml -n app
+kubectl apply -f app/k8s/service.yml -n app
+kubectl apply -f app/k8s/ingress.yml -n app

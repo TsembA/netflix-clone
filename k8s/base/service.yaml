@@ -1,11 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: demo-service
+  name: netflix-clone
+  namespace: dev
 spec:
   selector:
-    app: demo
+    app: netflix-clone
   ports:
     - port: 80
-      targetPort: 80
+      targetPort: 8080
   type: ClusterIP

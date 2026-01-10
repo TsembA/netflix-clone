@@ -1,7 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: demo-ingress
+  name: netflix-clone
+  namespace: dev
   annotations:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
@@ -15,6 +16,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: demo-service
+                name: netflix-clone
                 port:
                   number: 80
