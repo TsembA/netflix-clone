@@ -16,11 +16,11 @@ jobs:
 
     env:
       AWS_REGION: us-west-1
-      AWS_ACCOUNT_ID: 471112626077
-      ECR_REGISTRY: 471112626077.dkr.ecr.us-west-1.amazonaws.com
+      AWS_ACCOUNT_ID: "471112626077"
       ECR_REPOSITORY: netflix-clone
       IMAGE_TAG: ${{ github.sha }}
-      IMAGE_URI: 471112626077.dkr.ecr.us-west-1.amazonaws.com/netflix-clone:${{ github.sha }}
+      ECR_REGISTRY: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+      IMAGE_URI: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
     steps:
       # -------------------------
@@ -74,7 +74,9 @@ jobs:
       # -------------------------
       - name: Build Docker image
         run: |
-          docker build -t $IMAGE_URI ./app
+          docker build \
+            -t $IMAGE_URI \
+            ./app
 
       # -------------------------
       # Container security gate
@@ -94,7 +96,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::471112626077:role/github-actions-ecr
-          aws-region: us-west-1
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
