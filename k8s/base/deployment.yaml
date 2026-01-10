@@ -7,13 +7,22 @@ metadata:
     app: netflix-clone
 spec:
   replicas: 2
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+
   selector:
     matchLabels:
       app: netflix-clone
+
   template:
     metadata:
       labels:
         app: netflix-clone
+
     spec:
       securityContext:
         seccompProfile:
@@ -21,7 +30,9 @@ spec:
 
       containers:
         - name: netflix-clone
-          image: nginxinc/nginx-unprivileged:stable-alpine
+          image: 471112626077.dkr.ecr.us-west-1.amazonaws.com/netflix-clone:REPLACE_AT_DEPLOY
+          imagePullPolicy: IfNotPresent
+
           ports:
             - containerPort: 8080
 
@@ -49,8 +60,8 @@ spec:
 
           resources:
             requests:
-              cpu: 50m
-              memory: 128Mi
+              cpu: "50m"
+              memory: "128Mi"
             limits:
-              cpu: 250m
-              memory: 256Mi
+              cpu: "250m"
+              memory: "256Mi"

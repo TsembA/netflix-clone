@@ -105,3 +105,17 @@ jobs:
       - name: Push image to ECR
         run: |
           docker push $IMAGE_URI
+
+      # -------------------------
+      # Deploy to EKS
+      # -------------------------
+      - name: Deploy to EKS
+        run: |
+          aws eks update-kubeconfig \
+            --name netflix-dev \
+            --region $AWS_REGION
+
+          sed -e "s|REPLACE_AT_DEPLOY|${IMAGE_TAG}|g" \
+            k8s/base/deployment.yaml | kubectl apply -f -
+
+          kubectl rollout status deployment/netflix-clone -n dev
